@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск записей по комментариям</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function validateForm() {
+            var query = document.getElementById("search").value;
+            if (query.length < 3) {
+                alert("Запрос должен содержать минимум 3 символа.");
+                return false;
+            }
+            return true;
+        }
+
+        $(document).ready(function() {
+            $('#searchForm').on('submit', function(e) {
+                e.preventDefault();
+                if (validateForm()) {
+                    $.ajax({
+                        url: 'search.php',
+                        type: 'GET',
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            $('#searchResults').html(response);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Поиск записей по комментариям</h1>
+    <form id="searchForm" action="search.php" method="get">
+        <label for="search">Введите текст для поиска (минимум 3 символа):</label>
+        <input type="text" id="search" name="query" minlength="3" required>
+        <button type="submit">Найти</button>
+    </form>
+    <div id="searchResults"></div>
+</body>
+</html>
